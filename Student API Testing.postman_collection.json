@@ -1,0 +1,1056 @@
+{
+	"info": {
+		"_postman_id": "328cedee-a584-4654-ba5b-7554410ce383",
+		"name": "Student API Testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32069989",
+		"_collection_link": "https://laangol.postman.co/workspace/Laangol-Workspace~6cee455c-f9d9-45d6-8351-9d21065a6b17/collection/32069989-328cedee-a584-4654-ba5b-7554410ce383?action=share&source=collection_link&creator=32069989"
+	},
+	"item": [
+		{
+			"name": "POST /create",
+			"item": [
+				{
+					"name": "Valid Student Creation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test('Response contains valid student data', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id).to.exist;",
+									"    pm.expect(Number.isInteger(jsonData.id)).to.be.true;",
+									"    pm.expect(jsonData.name).to.be.a('string');",
+									"    pm.expect(jsonData.personnummer).to.be.a('string');",
+									"    pm.expect(jsonData.personnummer).to.match(/^\\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\\d|3[01])-\\d{4}$/, ",
+									"        'Personnummer must be in format YYMMDD-NNNN (e.g., 990101-1234)');",
+									"    pm.expect(jsonData.courses_passed).to.be.an('array');",
+									"    jsonData.courses_passed.forEach(function(course) {",
+									"        pm.expect(course).to.be.a('string');",
+									"        pm.expect(course).to.match(/^(CSE|DSE)\\d{4}$/, ",
+									"            'Course ID must be in format XXXNNNN where XXX is CSE or DSE and NNNN is a four-digit number (e.g., CSE1110)');",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\": \"Kamrul Hassan\", \"personnummer\": \"990101-1234\", \"courses_passed\": [\"DSE1001\"]}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Empty Name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 400', function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test('Error message for empty name', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.equal('Blank or null name');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\": \"\", \"personnummer\": \"990101-5678\", \"courses_passed\": [\"CSE1110\"]}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Null Name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 400', function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test('Error message for null name', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.equal('Blank or null name');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\": null, \"personnummer\": \"990101-9012\", \"courses_passed\": [\"CSE1110\"]}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Empty Personnummer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 400', function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test('Error message for empty personnummer', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.equal('Blank or null personnummer');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\": \"Kamrul Hassan\", \"personnummer\": \"\", \"courses_passed\": [\"CSE1110\"]}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Null Personnummer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 400', function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test('Error message for null personnummer', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.equal('Blank or null personnummer');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\": \"Kamrul Hassan\", \"personnummer\": null, \"courses_passed\": [\"CSE1110\"]}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invilaid Personnummer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 400', function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test('Error message for malformed personnummer', function () {",
+									"                        var jsonData = pm.response.json();",
+									"                        var requestBody = JSON.parse(pm.request.body.raw);",
+									"                       var personnummer = requestBody.personnummer;",
+									"                    pm.expect(jsonData.error).to.equal(`Malformed personnummer ${personnummer}`);",
+									"                    });"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\": \"Kamrul Hassan\", \"personnummer\": \"9901011234\", \"courses_passed\": [\"CSE1110\"]}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid Month",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 400', function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test('Error message for invalid month', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.equal('Invalid month in personnummer');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\": \"Kamrul Hassan\", \"personnummer\": \"991301-1234\", \"courses_passed\": [\"CSE1110\"]}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid Day",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 400', function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test('Error message for invalid day', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.equal('Invalid day in personnummer');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\": \"Kamrul Hassan\", \"personnummer\": \"990132-1234\", \"courses_passed\": [\"CSE1110\"]}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Existing student",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 400', function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test('Error message for existing personnummer', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.match(/Personnummer already belongs to student/);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\": \"Kamrul Hassan\", \"personnummer\": \"920223-9999\", \"courses_passed\": [\"CSE1110\"]}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid Course ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 400', function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test('Error message for invalid course ID', function () {",
+									"    pm.expect(course).to.be.a('string'); ",
+									"    pm.expect(course).to.match(/^(CSE|DSE)\\d{4}$/, ",
+									"            'Course ID must be in format XXXNNNN where XXX is CSE or DSE and NNNN is a four-digit number (e.g., CSE1110)');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\": \"Kamrul Hassan\", \"personnummer\": \"990101-3456\", \"courses_passed\": [\"DSF1001\"]}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Empty Courses List",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"pm.test('Response contains empty courses_passed', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.courses_passed).to.deep.equal([]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\": \"Kamrul Hassan\", \"personnummer\": \"990101-7890\", \"courses_passed\": []}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"create"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PUT /update/<id>",
+			"item": [
+				{
+					"name": "Valid Update",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Validate updated student response\", function () {",
+									"    var jsonData = pm.response.json();",
+									"",
+									"    // Check 'name' is a string and not empty",
+									"    pm.expect(jsonData.name).to.be.a('string');",
+									"    pm.expect(jsonData.name).to.not.be.empty;",
+									"",
+									"    // Check 'personnummer' is a string in format YYMMDD-NNNN",
+									"    var personnummerPattern = /^\\d{6}-\\d{4}$/;",
+									"    pm.expect(jsonData.personnummer).to.be.a('string');",
+									"    pm.expect(jsonData.personnummer).to.match(personnummerPattern);",
+									"",
+									"    // Check 'courses_passed' is a valid array",
+									"    pm.expect(jsonData.courses_passed).to.be.an('array');",
+									"",
+									"    // Validate each course ID in the array",
+									"    var coursePattern = /^(CSE|DSE)\\d{4}$/;",
+									"    jsonData.courses_passed.forEach(function(course) {",
+									"        pm.expect(course).to.be.a('string');",
+									"        pm.expect(course).to.match(coursePattern);",
+									"    });",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\": \"Kamrul Hassan\", \"personnummer\": \"920223-9999\", \"courses_passed\": [\"CSE1110\", \"DSE1001\"]}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/update/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"update",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid Student ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 400', function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test('Error message for invalid ID', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.equal('Student ID abc is not formatted correctly.');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\": \"Kamrul Hassan\", \"personnummer\": \"920223-9999\", \"courses_passed\": [\"CSE1110\"]}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/update/abc",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"update",
+								"abc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Non-existent Student ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 404', function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"pm.test('Error message for non-existent ID', function () {",
+									"                        var jsonData = pm.response.json();",
+									"                        var studentId = pm.request.url.path[pm.request.url.path.length - 1];",
+									"                        pm.expect(jsonData.error).to.equal(`Student ID ${studentId} does not exist`);",
+									"                    });"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\": \"Kamrul Hassan\", \"personnummer\": \"990101-6789\", \"courses_passed\": [\"CSE1110\"]}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/update/10989",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"update",
+								"10989"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Empty Name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 400', function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test('Error message for empty name', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.equal('Blank or null name');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\": \"\", \"personnummer\": \"920223-9999\", \"courses_passed\": [\"CSE1110\"]}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/update/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"update",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Null Name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 400', function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test('Error message for null name', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.equal('Blank or null name');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\": null, \"personnummer\": \"920223-9999\", \"courses_passed\": [\"CSE1110\"]}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/update/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"update",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid Day or month personnummer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response\r",
+									"let response = pm.response.json();\r",
+									"\r",
+									"// Test for invalid month\r",
+									"pm.test(\"Check if error is for invalid month or day\", function () {\r",
+									"    pm.expect(response).to.have.property('error');\r",
+									"    \r",
+									"    if (response.error.includes(\"Invalid month\")) {\r",
+									"        pm.expect(response.error).to.eql(\"Invalid month in personnummer\");\r",
+									"    } else if (response.error.includes(\"Invalid day\")) {\r",
+									"        pm.expect(response.error).to.eql(\"Invalid day in personnummer\");\r",
+									"    } else {\r",
+									"        pm.expect.fail(\"Unexpected error message: \" + response.error);\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\": \"Kamrul Hassan\", \"personnummer\": \"991301-1234\", \"courses_passed\": [\"CSE1110\"]}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/update/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"update",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Empty Personnummer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 400', function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test('Error message for empty personnummer', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.equal('Blank or null personnummer');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\": \"Kamrul Hassan\", \"personnummer\": \"\", \"courses_passed\": [\"CSE1110\"]}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/update/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"update",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Null Personnummer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 400', function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test('Error message for null personnummer', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.equal('Blank or null personnummer');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\": \"Kamrul Hassan\", \"personnummer\": null, \"courses_passed\": [\"CSE1110\"]}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/update/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"update",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Non-matching Personnummer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 400', function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test('Error message for non-matching personnummer', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.equal('Changes to personnummer are not allowed.');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\": \"Kamrul Hassan\", \"personnummer\": \"990101-0123\", \"courses_passed\": [\"CSE1110\"]}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/update/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"update",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid Course ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 400', function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test('Error message for invalid course ID', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.match(/^Malformed course ID: CSE123$/);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\": \"Kamrul Hassan\", \"personnummer\": \"920223-9999\", \"courses_passed\": [\"CSE1230\"]}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/update/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"update",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Empty Courses List",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Status code is 200', function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test('Response contains empty courses_passed', function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.courses_passed).to.deep.equal([]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\": \"Kamrul Hassan\", \"personnummer\": \"920223-9999\", \"courses_passed\": []}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/update/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"update",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"exec": [
+					"pm.environment.set('baseUrl', 'http://127.0.0.1:5000');"
+				],
+				"type": "text/javascript"
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://127.0.0.1:5000"
+		}
+	]
+}
